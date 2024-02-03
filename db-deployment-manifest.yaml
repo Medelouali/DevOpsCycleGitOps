@@ -3,6 +3,7 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: mysql-pv-claim # name of PVC essential for identifying the storage data
+  namespace: devops-cycle-test
   labels:
     app: mysql
     tier: database
@@ -18,6 +19,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: mysql
+  namespace: devops-cycle-test
   labels:
     app: mysql
     tier: database
@@ -60,6 +62,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: mysql-service  # DNS name
+  namespace: devops-cycle-test
   labels:
     app: mysql
     tier: database

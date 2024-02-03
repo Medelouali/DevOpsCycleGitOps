@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: devops-cycle-demo-deployment
+  namespace: devops-cycle-test
 spec:
   selector:
     matchLabels:
@@ -33,6 +34,7 @@ apiVersion: v1 # Kubernetes API version
 kind: Service # Kubernetes resource kind we are creating
 metadata: # Metadata of the resource kind we are creating
   name: devops-cycle-demo-service
+  namespace: devops-cycle-test
 spec:
   selector:
     app: devops-cycle-demo-app
