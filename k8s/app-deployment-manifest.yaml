@@ -1,0 +1,58 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: devops-cycle-demo-deployment
+  namespace: devops-cycle-test
+spec:
+  selector:
+    matchLabels:
+      app: devops-cycle-demo-deployment
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: devops-cycle-demo-deployment
+    spec:
+      containers:
+        - name: devops-cycle-demo-deployment-container
+          image: medelouali/devopscycle-image:1.26
+          resources:
+            limits:
+              cpu: "0.6"
+              memory: "512Mi"
+            requests:
+              cpu: "0.3"
+              memory: "256Mi"
+          ports:
+            - containerPort: 8081
+          env:   
+            - name: DB_HOST  
+              # value: mysql-service
+              valueFrom:
+                configMapKeyRef:
+                  name: app-config
+                  key: DB_HOST
+            
+            
+
+            - name: DB_PASSWORD 
+              valueFrom:
+                secretKeyRef:
+                  name: app-secret
+                  key: MYSQL_ROOT_PASSWORD
+
+---
+
+apiVersion: v1 
+kind: Service 
+metadata: 
+  name: devops-cycle-demo-service
+  namespace: devops-cycle-test
+spec:
+  selector:
+    app: devops-cycle-demo-deployment
+  ports:
+    - protocol: "TCP"
+      port: 8080 
+      targetPort: 8081 
+  type: LoadBalancer

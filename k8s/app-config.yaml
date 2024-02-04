@@ -4,4 +4,5 @@ metadata:
   name: app-config
 data:
   DB_HOST: mysql-service
-  DB_PORT: '3306'
+  MYSQL_ROOT_USERNAME: dmFsdWUtMg0KDQo
+  MYSQL_DATABASE: dmFsdWUtMg0KDQo
