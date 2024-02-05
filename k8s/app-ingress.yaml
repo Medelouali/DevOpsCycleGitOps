@@ -11,10 +11,9 @@ spec:
     http:
       paths:
       - path: /
-        pathType: Exact  
+        pathType: Prefix
         backend:
           service:
             name: app-internal-service
-            port: 
+            port:
               number: 8080
-
