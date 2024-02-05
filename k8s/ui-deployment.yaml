@@ -7,7 +7,7 @@ spec:
   selector:
     matchLabels:
       app: ui-deployment
-  replicas: 2
+  replicas: 4
   template:
     metadata:
       labels:
