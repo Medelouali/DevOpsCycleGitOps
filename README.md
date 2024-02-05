@@ -1,2 +1,2 @@
 # DevOpsCycleGitOps
-The GitOps part of the DevOpsCycle repo in this org
+The GitOps repo for the CD pipeline
