@@ -1,0 +1,14 @@
+apiVersion: v1 
+kind: Service 
+metadata: 
+  name: app-internal-service
+  namespace: devops-cycle-test
+spec:
+  selector:
+    app: devops-cycle-demo-deployment
+  ports:
+    - protocol: "TCP"
+      port: 8080 
+      targetPort: 8081 
+      nodePort: 30001 # 30000-32767
+  type: ClusterIP
