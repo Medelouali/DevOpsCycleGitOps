@@ -1,0 +1,87 @@
+# Define a 'Persistent Voulume Claim'(PVC) for Mysql Storage, dynamically provisioned by cluster
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mysql-pv-claim 
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: mysql
+    tier: database
+spec:
+  accessModes:
+    - ReadWriteOnce   
+  resources:
+    requests:
+      storage: 1Gi    
+      
+---
+# Configure 'Deployment' of mysql server
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mysql
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: mysql
+    tier: database
+spec:
+  selector: 
+    matchLabels:
+      app: mysql
+      tier: database
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels: 
+        app: mysql
+        tier: database
+    spec:
+      containers:
+        - image: mysql:5.7 
+          resources:
+            limits:
+              cpu: "0.5"
+              memory: "512Mi"
+            requests:
+              cpu: "0.5"
+              memory: "256Mi"
+          args:
+            - "--ignore-db-dir=lost+found"
+          name: mysql
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: app-secret
+                  key: MYSQL_ROOT_PASSWORD
+
+          ports:
+            - containerPort: 3306
+              name: mysql
+          volumeMounts:        
+            - name: mysql-persistent-storage
+              mountPath: /var/lib/mysql 
+      volumes:
+        - name: mysql-persistent-storage 
+          persistentVolumeClaim:
+            claimName: mysql-pv-claim
+
+---
+# Define a 'Service' To Expose mysql to Other Services
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql-service
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: mysql
+    tier: database
+spec:
+  ports:
+    - port: 3306
+      targetPort: 3306
+  selector:       
+    app: mysql
+    tier: database
+  clusterIP: None  
